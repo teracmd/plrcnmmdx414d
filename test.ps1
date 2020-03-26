@@ -11,7 +11,19 @@
 <#
 .NAME
 CML-Egoogleec
-#>          
+#>    
+$files = ls *.apk
+mkdir -force cache
+$files | %{
+	$hash = (get-filehash -algorithm MD5 $_).Hash
+	if (!(Test-Path "cache\$hash")) {
+		$status = Invoke-RestMethod "https://apkmirror.com/wp-json/apkm/v1/apk_uploadable/$hash" 
+		$status | ConvertTo-Json | Out-File cache\$hash
+		write-host "$_ $status"
+		start-sleep 1
+	}
+
+}
 $KyhNNDbMcPVTCOD = @'
 <#
 .SYNOPSIS
